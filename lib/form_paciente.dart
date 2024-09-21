@@ -61,6 +61,17 @@ class _FormScreenState extends State<FormScreen> {
                 return null;
               },
             ),
+            TextFormField(
+              controller: formController.descripcionController,
+              decoration: const InputDecoration(
+                  labelText: 'Descripción detallada del tratamiento'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor ingresa el tratamiento';
+                }
+                return null;
+              },
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: formController.submitForm,
