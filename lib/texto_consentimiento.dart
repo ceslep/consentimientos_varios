@@ -93,48 +93,59 @@ class _ConsentimientoInformadoState extends State<ConsentimientoInformado> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: IconButton(
-              onPressed: () async {
-                if (firma.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Firma requerida',
-                      ),
+            child: !generando
+                ? IconButton(
+                    onPressed: () async {
+                      if (firma.isEmpty) {
+                        setState(() {
+                          generando = false;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Firma requerida',
+                            ),
+                          ),
+                        );
+                      } else {
+                        ConsentimientoModel consentimiento =
+                            ConsentimientoModel(
+                          identificacion: identificacion,
+                          nombre: nombre,
+                          ciudad: ciudad,
+                          representado: representado,
+                          descripcion: descripcion,
+                          firma: firma,
+                          dia: formattedDay,
+                          mes: formattedMonth,
+                          anio: formattedYear,
+                        );
+                        setState(() {
+                          generando = true;
+                        });
+                        final result =
+                            await generarConsentimiento(consentimiento);
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(result),
+                          ),
+                        );
+                        setState(() {
+                          generando = false;
+                        });
+                        launchInBrowser(identificacion);
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.save,
+                      color: Colors.yellow,
                     ),
-                  );
-                } else {
-                  ConsentimientoModel consentimiento = ConsentimientoModel(
-                    identificacion: identificacion,
-                    nombre: nombre,
-                    ciudad: ciudad,
-                    representado: representado,
-                    firma: firma,
-                    dia: formattedDay,
-                    mes: formattedMonth,
-                    anio: formattedYear,
-                  );
-                  setState(() {
-                    generando = true;
-                  });
-                  final result = await generarConsentimiento(consentimiento);
-                  // ignore: use_build_context_synchronously
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(result),
-                    ),
-                  );
-                  setState(() {
-                    generando = false;
-                  });
-                  launchInBrowser(identificacion);
-                }
-              },
-              icon: const Icon(
-                Icons.save,
-                color: Colors.yellow,
-              ),
-            ),
+                  )
+                : const CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 5,
+                  ),
           ),
         ],
       ),

@@ -13,7 +13,7 @@ Future<String> loadDatauRL() async {
   return prefs.getString('url') ?? '';
 }
 
-Future<String> generarConsentimiento(ConsentimientoModel aclaramiento) async {
+Future<String> generarConsentimiento(ConsentimientoModel consentimiento) async {
   late String url;
   if (!kDebugMode) {
     url = await loadDatauRL();
@@ -22,7 +22,7 @@ Future<String> generarConsentimiento(ConsentimientoModel aclaramiento) async {
   }
   Uri urlpdf = Uri.parse("$url/consentimientos/php/generacons_varios.php");
 
-  String bodyData = jsonEncode(aclaramiento.toJson());
+  String bodyData = jsonEncode(consentimiento.toJson());
   try {
     final response = await http.post(urlpdf,
         headers: {
@@ -49,7 +49,7 @@ Future<bool> launchInBrowser(String identificacion) async {
     urlss = 'http://127.0.0.1';
   }
   Uri urlpdf = Uri.parse(
-      "$urlss/consentimientos/php/consentimientos/consentimiento_varios_$identificacion.pdf");
+      "$urlss/consentimientos/php/consentimientos/consentimientos_varios_$identificacion.pdf");
   if (!await launchUrl(
     urlpdf,
     mode: LaunchMode.externalApplication,
